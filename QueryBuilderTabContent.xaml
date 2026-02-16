@@ -1,0 +1,102 @@
+<UserControl x:Class="DataLens.QueryBuilderTabContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:DataLens.Models">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,0,12">
+            <TextBlock x:Name="TxtTableName" Text="Table" FontWeight="SemiBold" Margin="0,0,0,8"/>
+            <TextBlock Text="Columns to load" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <CheckBox x:Name="ChkUseAllColumns" Content="All columns" IsChecked="{Binding UseAllColumns, Mode=TwoWay}"
+                          Checked="ChkUseAllColumns_Changed" Unchecked="ChkUseAllColumns_Changed"/>
+                <CheckBox x:Name="ChkDistinct" Content="Distinct" Margin="12,0,0,0"
+                          IsChecked="{Binding UseDistinct, Mode=TwoWay}"/>
+            </StackPanel>
+            <ListBox x:Name="SelectableColumnsListBox" MaxHeight="100" Margin="0,4,0,8"
+                     SelectionMode="Extended" Visibility="Collapsed">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding DisplayLabel}" IsChecked="{Binding IsSelected}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Text="Relation tables (JOINs)" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            <ItemsControl x:Name="JoinsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,4">
+                            <ComboBox Width="100" ItemsSource="{Binding Source={x:Static models:JoinRow.JoinTypes}}"
+                                      SelectedItem="{Binding JoinType}" Margin="0,0,6,0"/>
+                            <ComboBox Width="140" ItemsSource="{Binding DataContext.AllTableNames, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      SelectedItem="{Binding RelatedTableName}" Margin="0,0,6,0"
+                                      SelectionChanged="JoinRelatedTable_SelectionChanged"/>
+                            <TextBlock Text="ON" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <ComboBox Width="120" ItemsSource="{Binding DataContext.LeftTableRefOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      DisplayMemberPath="DisplayName" SelectedValuePath="Ref" SelectedValue="{Binding LeftTableRef}" Margin="0,0,6,0"
+                                      SelectionChanged="JoinLeftTableRef_SelectionChanged"/>
+                            <ComboBox Width="100" ItemsSource="{Binding LeftColumnOptions}"
+                                      SelectedItem="{Binding LeftColumn}" Margin="0,0,6,0"/>
+                            <TextBlock Text="=" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <ComboBox Width="100" ItemsSource="{Binding RelatedTableColumns}"
+                                      SelectedItem="{Binding RightColumn}" Margin="0,0,6,0"/>
+                            <Button Content="✕" Width="24" Padding="2,0" Tag="{Binding}" Click="RemoveJoin_OnClick"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button x:Name="BtnAddJoin" Content="+ Add relation table" Margin="0,6,0,0" Click="BtnAddJoin_OnClick" HorizontalAlignment="Left"/>
+            <TextBlock Text="Where" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <ItemsControl x:Name="ConditionsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                            <ComboBox Width="140" ItemsSource="{Binding DataContext.TableColumns, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      SelectedItem="{Binding Column}" Margin="0,0,6,0"/>
+                            <ComboBox Width="90" ItemsSource="{Binding Source={x:Static models:QueryConditionRow.Operators}}"
+                                      SelectedItem="{Binding Operator}" Margin="0,0,6,0"/>
+                            <TextBox Width="120" Text="{Binding Value}" Margin="0,0,6,0"/>
+                            <Button Content="✕" Width="24" Padding="2,0" Tag="{Binding}" Click="RemoveCondition_OnClick"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button x:Name="BtnAddCondition" Content="+ Add condition" Margin="0,6,0,0" Click="BtnAddCondition_OnClick" HorizontalAlignment="Left"/>
+            <TextBlock Text="Group by" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <ComboBox x:Name="CboGroupByColumn" Width="200" Margin="0,0,0,8" HorizontalAlignment="Left"/>
+            <TextBlock Text="Having" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            <TextBox x:Name="TxtHaving" Margin="0,0,0,8" MinHeight="28" Padding="6,4" FontFamily="Consolas" FontSize="12"
+                     AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                     ToolTip="e.g. COUNT(*) &gt; 1 or SUM(amount) &gt; 0"/>
+            <TextBlock Text="Union" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            <TextBox x:Name="TxtUnionTail" Margin="0,0,0,8" MinHeight="36" Padding="6,4" FontFamily="Consolas" FontSize="12"
+                     AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                     ToolTip="e.g. UNION ALL SELECT id, name FROM other_table"/>
+            <TextBlock Text="Order by" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <ComboBox x:Name="CboOrderByColumn" Width="160" Margin="0,0,8,0"/>
+                <ComboBox x:Name="CboOrderByDirection" Width="80" SelectedIndex="0">
+                    <ComboBoxItem Content="ASC"/>
+                    <ComboBoxItem Content="DESC"/>
+                </ComboBox>
+            </StackPanel>
+            <TextBlock Text="Limit" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="TxtLimit" Width="80" HorizontalAlignment="Left" Margin="0,0,0,12" Text="100"/>
+            <Button x:Name="BtnRunQuery" Content="Run query" Width="100" Height="28" Margin="0,8,0,8" Click="BtnRunQuery_OnClick"/>
+            <TextBlock Text="Running query" FontWeight="SemiBold" Margin="0,8,0,4"/>
+            <Grid Margin="0,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="TxtRunningQuery" Grid.Column="0" IsReadOnly="True" FontFamily="Consolas" FontSize="12"
+                         Padding="8,6" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                         BorderBrush="#CCC" BorderThickness="1" Background="#F9F9F9" MinHeight="44" Margin="0,0,6,0"/>
+                <Button x:Name="BtnCopyQuery" Grid.Column="1" Width="36" Height="36" Padding="0" ToolTip="Copy query to clipboard"
+                        Click="BtnCopyQuery_OnClick" VerticalAlignment="Top">
+                    <TextBlock Text="📋" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+            </Grid>
+            <TextBlock x:Name="TxtStatus" Foreground="#666" Margin="0,0,0,4"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,41 @@
+<Window x:Class="DataLens.QueryResultWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Query result" Height="560" Width="860"
+        MinHeight="360" MinWidth="520"
+        WindowStartupLocation="CenterOwner"
+        Background="#FAFAFA">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="TxtTitle" Grid.Row="0" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="#333"/>
+        <StackPanel Grid.Row="1" Margin="0,0,0,8">
+            <TextBlock Text="Query (editable)" FontWeight="SemiBold" Margin="0,0,0,4" Foreground="#555"/>
+            <TextBox x:Name="TxtQuery" FontFamily="Consolas" FontSize="12" Padding="6"
+                     AcceptsReturn="True" TextWrapping="NoWrap"
+                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button x:Name="BtnExportCsv" Content="Export CSV" Width="90" Height="26" Margin="0,0,6,0" Click="BtnExportCsv_Click"/>
+            <Button x:Name="BtnExportJson" Content="Export JSON" Width="90" Height="26" Margin="0,0,6,0" Click="BtnExportJson_Click"/>
+            <Button x:Name="BtnEditRow" Content="Edit selected row" Width="130" Height="26" Click="BtnEditRow_Click"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid>
+                <DataGrid x:Name="DataGridResult" Visibility="Collapsed"
+                          AutoGenerateColumns="True" IsReadOnly="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False"
+                          CanUserReorderColumns="True" CanUserResizeRows="False"
+                          SelectionMode="Extended" SelectionUnit="FullRow"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          AlternatingRowBackground="#F9F9F9" RowHeight="28"
+                          CellEditEnding="DataGridResult_CellEditEnding"/>
+                <TextBlock x:Name="TxtMessage" Visibility="Collapsed" Margin="0" Foreground="#333" TextWrapping="Wrap"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

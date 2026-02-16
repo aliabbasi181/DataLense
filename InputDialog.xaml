@@ -1,0 +1,22 @@
+<Window x:Class="DataLens.InputDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Name" Height="260" Width="520"
+        MinHeight="220" MinWidth="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize"
+        Background="#F5F5F5">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="TxtPrompt" Text="Enter name:" Margin="0,0,0,8"/>
+        <TextBox x:Name="TxtValue" Grid.Row="1" Margin="0,0,0,16" Padding="8,6"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="BtnOk" Content="OK" Width="80" Height="28" Margin="0,0,8,0" IsDefault="True" Click="BtnOk_OnClick"/>
+            <Button Content="Cancel" Width="80" Height="28" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>
